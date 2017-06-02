@@ -1,0 +1,9 @@
+8
+Lightning Strike;30
+Firebolt;60
+Smash;40
+Brawl;20
+Assassinate;40
+Dual Blades;30
+Healing Circle;70
+Stab;20

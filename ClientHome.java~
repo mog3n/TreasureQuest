@@ -1,0 +1,250 @@
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.event.*;
+import java.io.*;
+import javax.imageio.*;
+import java.awt.image.*;
+
+public class ClientHome extends JPanel implements ActionListener{
+
+ Timer timer;
+ Timer timerResetClick;
+ static int mouseButton = 0;
+ static String keyChar = "";
+ static int keyCode;
+ int tab = 1;
+ int characterSelection = 0;
+ 
+ //Images
+ BufferedImage homeImg;
+ BufferedImage Crosshair;
+ BufferedImage helpImg;
+ BufferedImage wallImg1;
+ BufferedImage tabImg1;
+ BufferedImage playButtonsImg;
+
+ JTextField ipTextField;
+
+ //Fonts
+ Font menuFont = new Font("Arial", Font.PLAIN, 16);
+ Font textFont = new Font("Arial", Font.PLAIN, 13);
+
+ public void actionPerformed(ActionEvent e){
+  if(e.getSource() == timer){
+   this.repaint();
+  }
+  if(e.getSource() == timerResetClick){
+    mouseButton = 0;
+  }
+ }
+
+ public void paintComponent (Graphics g) {
+  if(!ClientMain.gameHasStarted){
+   //Color darkGrey = new Color(70,70,70);
+   //g.setColor(darkGrey);
+   //g.fillRect(0, 0, 1280, 720);
+   g.drawImage(wallImg1, 0, 0, null);
+  //======TABBED USER INTERFACE=======
+  g.setColor(Color.WHITE);
+  g.setFont(menuFont);
+
+  //===TABS====
+  switch(tab){
+   case 1: //==============HOME TAB============
+   ipTextField.setVisible(false);
+   g.setColor(Color.WHITE);
+   g.drawImage(tabImg1, 0, 0, null);
+   //g.drawString("Welcome to [strName]", 304, 300);
+   break;
+   case 2: //=============PLAY TAB==================
+   ipTextField.setVisible(false);
+
+   //sub tab in PLAY
+  int moveY = 0;
+  g.drawImage(playButtonsImg, 0, 72+moveY, 1280, 142+72+moveY, 0, (210*3), 1280, (210*3)+142, null);
+
+   //draw JOIN GAME IMAGE
+    int btnY1 = 72+142 + 85; //80
+    g.drawImage(playButtonsImg, 0, btnY1, 1280, btnY1+210, 0, 0, 1280, 210, null);
+    if(ClientMain.ScreenMouseY > btnY1 && ClientMain.ScreenMouseY < btnY1+210){
+      g.drawImage(playButtonsImg, 0, btnY1, 1280, btnY1+210, 0, 420, 1280, 630, null);
+      if(mouseButton == 1){
+        tab = 21;
+        mouseButton = 0;
+      }
+    }
+
+    //draw START GAME image
+    int btnY2 = 72+142+(210) + 85; //80
+    g.drawImage(playButtonsImg, 0, btnY2, 1280, btnY2+210, 0, 210, 1280, 420, null);
+    if(ClientMain.ScreenMouseY > btnY2 && ClientMain.ScreenMouseY < btnY2+210){
+      g.drawImage(playButtonsImg, 0, btnY2, 1280, btnY2+210, 0, 420, 1280, 630, null);
+      if(mouseButton == 1){
+        tab = 22;
+        mouseButton = 0;
+      }
+    }
+    break;
+
+   case 3: //===================HELP SCREEN===============
+    ipTextField.setVisible(false);
+    g.drawImage(helpImg, 0, 0, null);
+    break;
+
+  case 21: //======TAB FOR JOIN GAME
+  //sub tab in PLAY
+  moveY = 0;
+  g.drawImage(playButtonsImg, 0, 72+moveY, 1280, 142+72+moveY, 0, (210*3)+142, 1280, (210*3)+(142*2), null);
+
+  //BUTTON FOR BACK
+  int BtnX = 93;
+   int BtnY = 220;
+   if(ClientMain.ScreenMouseX > BtnX && ClientMain.ScreenMouseX < BtnX+168 && ClientMain.ScreenMouseY > BtnY+15 && ClientMain.ScreenMouseY < BtnY + 90){
+    g.drawImage(homeImg, BtnX, BtnY, BtnX+168, BtnY+60, 168, 60, 336, 120, null);
+    if(mouseButton == 1){
+     //button is clicked
+     tab = 2;
+    }
+   }else{
+    g.drawImage(homeImg, BtnX, BtnY, BtnX+168, BtnY+60, 0, 60, 168, 120, null);
+   }
+   g.drawString("back", BtnX + 45, BtnY + 35);
+  
+
+    g.drawString("IP Address", 304, 300);
+    //g.drawRect(304, 320, 672, 40);
+   ipTextField.setVisible(true);
+   //button for CLEAR
+   BtnX = 304;
+   BtnY = 380;
+   if(ClientMain.ScreenMouseX > BtnX && ClientMain.ScreenMouseX < BtnX+168 && ClientMain.ScreenMouseY > BtnY+15 && ClientMain.ScreenMouseY < BtnY + 90){
+    g.drawImage(homeImg, BtnX, BtnY, BtnX+168, BtnY+60, 168, 60, 336, 120, null);
+    if(mouseButton == 1){
+     //join button is clicked, start the game.
+     ClientMain.ip = ipTextField.getText();
+     ClientMain.port = 6112;
+     ClientMain.gameHasStarted = true;
+     this.timer.stop();
+    }
+   }else{
+    g.drawImage(homeImg, BtnX, BtnY, BtnX+168, BtnY+60, 0, 60, 168, 120, null);
+   }
+   g.drawString("CONNECT", BtnX + 45, BtnY + 35);
+
+  break;
+
+  case 22:
+    //===================CREATE A SERVER TAB=========
+    moveY = 0;
+    g.drawImage(playButtonsImg, 0, 72+moveY, 1280, 142+72+moveY, 0, (210*3)+(142*2), 1280, (210*3)+(142*3), null);
+
+
+
+    //BUTTON FOR BACK
+  BtnX = 93;
+   BtnY = 220;
+   if(ClientMain.ScreenMouseX > BtnX && ClientMain.ScreenMouseX < BtnX+168 && ClientMain.ScreenMouseY > BtnY+15 && ClientMain.ScreenMouseY < BtnY + 90){
+    g.drawImage(homeImg, BtnX, BtnY, BtnX+168, BtnY+60, 168, 60, 336, 120, null);
+    if(mouseButton == 1){
+     //button is clicked
+     tab = 2;
+    }
+   }else{
+    g.drawImage(homeImg, BtnX, BtnY, BtnX+168, BtnY+60, 0, 60, 168, 120, null);
+   }
+   g.drawString("back", BtnX + 45, BtnY + 35);
+
+
+  break;
+
+   default:
+    ipTextField.setVisible(false);
+    break;
+   }
+
+  }else{
+   g.clearRect(0, 0, 1280, 720);
+   g.drawString("Connecting to " + ClientMain.ip, 50, 370);
+  }
+  
+  //===================DRAW HEADER / NAV BAR=====================
+  int paddingY = 10;
+  g.drawImage(homeImg, 0, paddingY, 1280, paddingY + 60, 0, 0, 1280, 60, null); //background image
+  int buttons = 4; //number of buttons
+   int placeX = 304; //inital placement position (x)
+   
+   //draw each individual button
+   for(int button=1; button <= buttons; button++){
+   //check if mouse is hover over button
+    int mouseX = ClientMain.ScreenMouseX;
+    int mouseY = ClientMain.ScreenMouseY;
+   //System.out.println(mouseX + "," + mouseY);
+   if(mouseX > placeX && mouseX < placeX+paddingY+168 && mouseY > 0 && mouseY < paddingY + 90){ //Button size: 128x60
+    g.drawImage(homeImg, placeX, paddingY, placeX+168, paddingY+60, 168, 60, 336, 120, null);
+    //check if button is clicked
+    if(mouseButton == 1){
+     switch(button){
+      case 1: tab = 1; break;
+      case 2: tab = 2; break;
+      case 3: tab = 3; break;
+      case 4:
+      System.exit(0);
+      break;
+      default: break; //no action
+     }
+    }
+
+   }else{
+    //if current tab, highlight as well
+    if(tab == button){
+     g.drawImage(homeImg, placeX, paddingY, placeX+168, paddingY+60, 168, 60, 336, 120, null);
+    }else{
+     g.drawImage(homeImg, placeX, paddingY, placeX+168, paddingY+60, 0, 60, 168, 120, null);
+    }
+   }
+   //write text
+   g.setFont(menuFont);
+   g.setColor(Color.WHITE);
+   String btnLabel = "";
+   switch(button){
+    case 1: btnLabel = "HOME"; break;
+    case 2: btnLabel = "PLAY"; break;
+    case 3: btnLabel = "TUTORIAL"; break;
+    case 4: btnLabel = "EXIT"; break;
+    default: btnLabel = "?????"; break;
+   }
+   //center text
+   g.drawString(btnLabel, placeX + 20, paddingY+34);
+   placeX+=168;
+  }
+  //draw crosshair
+   g.drawImage(Crosshair, ClientMain.ScreenMouseX-15, ClientMain.ScreenMouseY-30, null);
+ }
+
+ ClientHome(){
+  super();
+  timer = new Timer(1000/60, this);
+  timerResetClick = new Timer(50, this);
+  timerResetClick.start();
+  timer.start();
+
+  ipTextField = new JTextField(ClientMain.ip);
+  ipTextField.setSize(672, 40);
+  ipTextField.setLocation(304, 320);
+  ipTextField.setVisible(false);
+
+  this.add(ipTextField);
+
+  try{
+   homeImg = ImageIO.read(new File("UI_home.png"));
+   Crosshair = ImageIO.read(new File("UI_crosshair.png"));
+   helpImg = ImageIO.read(new File("UI_help.png"));
+   wallImg1 = ImageIO.read(new File("UI_wall2.png"));
+   tabImg1 = ImageIO.read(new File("UI_tab1.png"));
+   playButtonsImg = ImageIO.read(new File("UI_playbtn.png"));
+  }catch(Exception e){
+  }
+
+ }
+}
