@@ -1,0 +1,4 @@
+mage;Lightning Strike;1500;Firebolt;2000
+buff;Smash;1500;Brawl;1000
+thief;Assassinate;1500;Dual Blades;1000
+doctor;Healing Circle;1500;Stab;1000
