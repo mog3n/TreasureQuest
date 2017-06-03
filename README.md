@@ -28,7 +28,3 @@ When you connect, you'll be prompted to select a player class
 Similar to "Enter The Gungeon", your player will be centered on the screen, and will look in the direction of your crosshair.
 ![Some enemies](http://i.imgur.com/R16YftT.png)
 Let's play!
-
-
-
-(recieved 100%)
